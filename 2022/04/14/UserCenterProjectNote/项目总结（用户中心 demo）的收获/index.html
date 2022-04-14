@@ -1,0 +1,368 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Project harvest and summary | ZeroTwo Blog</title><meta name="keywords" content="ZeroTwo"><meta name="author" content="ZeroTwo"><meta name="copyright" content="ZeroTwo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="项目总结（用户中心 demo）的收获流程 需求分析 对系统进行设计（概要设计，详细设计） 技术选型 初始化 &#x2F; 引入技术（例如：Ant-Design、SpringBoot、umi） 写 Demo ：将引入的技术先跑通，保证能够在有基本数据的情况下运行起来 写代码：实现业务逻辑 测试：单元测试，写完一块功能，对这一部分功能进行单元测试 (Junit) ，不要等到所有的模块都完成后在测试，容易出现问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project harvest and summary">
+<meta property="og:url" content="http://zerotwo0w0.github.io/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/index.html">
+<meta property="og:site_name" content="ZeroTwo Blog">
+<meta property="og:description" content="项目总结（用户中心 demo）的收获流程 需求分析 对系统进行设计（概要设计，详细设计） 技术选型 初始化 &#x2F; 引入技术（例如：Ant-Design、SpringBoot、umi） 写 Demo ：将引入的技术先跑通，保证能够在有基本数据的情况下运行起来 写代码：实现业务逻辑 测试：单元测试，写完一块功能，对这一部分功能进行单元测试 (Junit) ，不要等到所有的模块都完成后在测试，容易出现问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg">
+<meta property="article:published_time" content="2022-04-14T11:46:00.000Z">
+<meta property="article:modified_time" content="2022-04-14T11:46:42.344Z">
+<meta property="article:author" content="ZeroTwo">
+<meta property="article:tag" content="ZeroTwo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://zerotwo0w0.github.io/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Project harvest and summary',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-14 19:46:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ZeroTwo Blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Project harvest and summary</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-14T11:46:00.000Z" title="发表于 2022-04-14 19:46:00">2022-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-14T11:46:42.344Z" title="更新于 2022-04-14 19:46:42">2022-04-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Project harvest and summary"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="项目总结（用户中心-demo）的收获"><a href="#项目总结（用户中心-demo）的收获" class="headerlink" title="项目总结（用户中心 demo）的收获"></a>项目总结（用户中心 <code>demo</code>）的收获</h1><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ol>
+<li>需求分析</li>
+<li>对系统进行设计（概要设计，详细设计）</li>
+<li>技术选型</li>
+<li>初始化 <code>/</code> 引入技术（例如：<code>Ant-Design、SpringBoot、umi</code>）</li>
+<li>写 <code>Demo</code> ：将引入的技术先跑通，保证能够在有基本数据的情况下运行起来</li>
+<li>写代码：实现业务逻辑</li>
+<li>测试：单元测试，写完一块功能，对这一部分功能进行单元测试 <code>(Junit)</code> ，不要等到所有的模块都完成后在测试，容易出现问题，早测出早解决</li>
+<li>代码提交 <code>/</code> 代码评审</li>
+<li>部署</li>
+<li>发布</li>
+</ol>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>即：我们要完成什么功能</p>
+<ol>
+<li>最基本的 <strong>登录与注册</strong></li>
+<li>对登录的用户进行管理 <strong>（管理员权限）</strong>：对用户进行<strong>查询与修改</strong></li>
+<li><strong>对注册用户进行校验</strong>（输入编号是否合法等）</li>
+</ol>
+<h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><ul>
+<li>前端<ul>
+<li>三件套 <code>(HTML + CSS + JavaScript)</code>  +</li>
+<li><code>React</code> </li>
+<li>组件库 <code>Ant-Design</code> </li>
+<li><code>Umi</code> </li>
+<li><code>Ant-Design-Pro</code>（现成的管理系统）</li>
+</ul>
+</li>
+<li>后端<ul>
+<li><code>Java</code></li>
+<li><code>Spring</code> ：依赖注入框架，不需要自己管理 <code>Java</code> 对象，集成一些其他内容</li>
+<li><code>SpringMVC</code> ：<code>Web</code> 框架，提供接口访问，<code>Restful</code> 接口等</li>
+<li><code>MyBatis</code> ：<code>Java</code> 操作数据库的框架，即 持久层 框架，对 <code>JDBC</code> 的封装</li>
+<li><code>MyBatis-Plus</code> ：<code>MyBatis</code> 的增强版，提供了最基本的增删改查操作</li>
+<li><code>SpringBoot</code> ：不需要自己整合框架，可以快速启动项目</li>
+<li><code>Junit</code> 单元测试</li>
+<li><code>MySQL</code> 数据库</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>第一次接触 <code>Ant-Design、Umi、Ant-Design-Pro</code> 这种大型前端组件库，可以快速的帮助我们完成初始化，说实话还是挺震惊的，后端的 <code>SpringBoot</code> 框架也是快速初始化后端项目，但是没有前端这么华丽，相应的，前端的阅读起来会更加的费劲，因为没有太多的接触 </p>
+</blockquote>
+<h2 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h2><p><code>User</code> 表</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td><code>bigint</code></td>
+<td><code>AUTO_INCREMENT PRIMARY Key</code></td>
+</tr>
+<tr>
+<td><code>planetCode</code></td>
+<td><code>varchar(512)</code></td>
+<td>星球编号</td>
+</tr>
+<tr>
+<td>username</td>
+<td><code>varchar(256)</code></td>
+<td>用户昵称</td>
+</tr>
+<tr>
+<td><code>userAccount</code></td>
+<td><code>varchar(256)</code></td>
+<td>用户账号</td>
+</tr>
+<tr>
+<td><code>userPassword</code></td>
+<td><code>varchar(512)</code></td>
+<td>用户密码</td>
+</tr>
+<tr>
+<td><code>gender</code></td>
+<td><code>tinyint</code></td>
+<td>性别</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td><code>varchar(128)</code></td>
+<td>手机号码</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>varchar(128)</code></td>
+<td>邮箱</td>
+</tr>
+<tr>
+<td><code>avatarUrl</code></td>
+<td><code>varchar(1024)</code></td>
+<td>用户头像</td>
+</tr>
+<tr>
+<td><code>userRole</code></td>
+<td><code>int</code></td>
+<td>用户角色  <code>default 0</code><br /><code>0 --&gt; 普通用户</code><br /><code>1 --&gt; 管理员</code></td>
+</tr>
+<tr>
+<td><code>userStauts</code></td>
+<td><code>int</code></td>
+<td>用户状态 <code>default 0</code><br /><code>0 --&gt; 正常</code></td>
+</tr>
+<tr>
+<td><code>createTime</code></td>
+<td><code>datetime</code></td>
+<td>创建时间 <code>default CURRENT_TIMESTAMP</code></td>
+</tr>
+<tr>
+<td><code>updateTime</code></td>
+<td><code>datetime</code></td>
+<td>更新时间 <code>default CURRENT_TIMESTAMP</code>  <code>on update CURRENT_TIMESTAMP</code></td>
+</tr>
+<tr>
+<td><code>isDelete</code></td>
+<td><code>tinyint</code></td>
+<td>是否删除 <code>0 --&gt; 未删除</code>  <code>1 --&gt; 删除</code></td>
+</tr>
+</tbody></table>
+<hr>
+<blockquote>
+<p> 在这次做项目时我学到了 <code>createTime,updateTime,isDelete</code> 这三个新的字段，以前设计数据库表时从来没有意识到过这三点</p>
+<p> <code>isDelete</code> 来表示逻辑删除，即并非将数据真的从数据库中删除，而是改变这条数据的状态，来让查询数据库时忽略这条数据，因为数据一旦删除，恢复起来就会很麻烦，因此删除应该从逻辑上删除，而非让这条数据从数据库中消失</p>
+</blockquote>
+<blockquote>
+<p>这里使用了 <code>MyBatis-X</code> 插件，自动根据数据库生成 <code>domain</code> 实体对象，<code>mapper</code> (映射，即操作数据库的对象)，<code>mapper.xml</code> (定义了 <code>mapper</code> 对象和数据库字段之间的映射关系，可以在里面写 <code>SQL</code> 语句)、<code>service</code>（包含常用的增删改查）、<code>serviceImpl</code> （具体的 <code>service</code> 实现）</p>
+</blockquote>
+<hr>
+<h2 id="服务的逻辑-Service-层"><a href="#服务的逻辑-Service-层" class="headerlink" title="服务的逻辑 (Service 层)"></a>服务的逻辑 <code>(Service 层)</code></h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><ol>
+<li>用户在前台输入：账号 <code>userAccount</code>，密码 <code>userPassword</code>，确认密码 <code>checkPassword</code></li>
+<li>校验输入的合法性<ol>
+<li>非空</li>
+<li><code>userAccount</code> 长度不小于 <code>4</code> 位</li>
+<li><code>userPassword</code> 长度不小于 <code>8</code> 位</li>
+<li><code>userAccount</code> 不能重复</li>
+<li><code>userAccount</code> 中不包含特殊字符</li>
+<li><code>userPassword</code> 与 <code>checkPassword</code> 相同</li>
+</ol>
+</li>
+<li>通过后，对密码进行加密 （使用 <code>SALT</code> 值与 <code>SpringBoot </code>自带的 <code>md5</code> 加密）&#x3D;&#x3D;密码一定不要以明文的形式存入数据库，保证安全性&#x3D;&#x3D;</li>
+<li>向数据库插入数据</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 盐值，用于加密</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SALT = <span class="string">&quot;Medamap&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">userRegister</span><span class="params">(String userAccount, String userPassword, String checkPassword, String planetCode)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// 1. 校验</span></span><br><span class="line">       <span class="comment">// 1.1 非空</span></span><br><span class="line">       <span class="keyword">if</span> (StringUtils.isAnyBlank(userAccount,userPassword,checkPassword,planetCode)) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;参数为空&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.2 账户长度不小于 4 位</span></span><br><span class="line">       <span class="keyword">if</span> (userAccount.length() &lt; <span class="number">4</span> ) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账户长度小于 4 位&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.3 密码不小于 8 位</span></span><br><span class="line">       <span class="keyword">if</span> (userPassword.length() &lt; <span class="number">8</span> || checkPassword.length() &lt; <span class="number">8</span> ) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;密码长度小于 8 位&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 星球编号 &lt;= 5</span></span><br><span class="line">       <span class="keyword">if</span> (planetCode.length() &gt; <span class="number">5</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;星球编号大于 5 位&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.4 账户不包含特殊字符</span></span><br><span class="line">       String validPattern = <span class="string">&quot;[`~!@#$%^&amp;*()+=|&#123;&#125;&#x27;:;&#x27;,\\\\[\\\\].&lt;&gt;/?~！@#￥%……&amp;*（）——+|&#123;&#125;【】‘；：”“’。，、？]&quot;</span>;</span><br><span class="line">       Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);</span><br><span class="line">       <span class="keyword">if</span> (matcher.find()) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账号包含特殊字符&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.5 密码和校验密码相同</span></span><br><span class="line">       <span class="keyword">if</span> (!userPassword.equals(checkPassword)) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;两次密码不一致&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.6 账户不能重复</span></span><br><span class="line">       QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">       queryWrapper.eq(<span class="string">&quot;userAccount&quot;</span>, userAccount);</span><br><span class="line">       <span class="keyword">long</span> count = userMapper.selectCount(queryWrapper);</span><br><span class="line">       <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账户重复&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 1.7 星期编号不能重复</span></span><br><span class="line">       queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">       queryWrapper.eq(<span class="string">&quot;planetCode&quot;</span>, planetCode);</span><br><span class="line">       count = userMapper.selectCount(queryWrapper);</span><br><span class="line">       <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;星球编号重复&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 2. 加密密码</span></span><br><span class="line">       String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 3. 嵌入对象</span></span><br><span class="line">       User user = <span class="keyword">new</span> User();</span><br><span class="line">       user.setUserAccount(userAccount);</span><br><span class="line">       user.setUserPassword(encryptPassword);</span><br><span class="line">       user.setPlanetCode(planetCode);</span><br><span class="line">       <span class="keyword">boolean</span> saveResult = <span class="keyword">this</span>.save(user);</span><br><span class="line">       <span class="keyword">if</span> (!saveResult) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;插入失败&quot;</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> user.getId();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><p>接收参数： 账号 <code>userAccount</code> ，密码 <code>userPassword</code></p>
+<p>请求方式： <code>POST</code> （因为请求体可能会很长，因此不建议使用 <code>GET</code> 请求方式，因为 <code>POST</code> 将信息放在请求体中，<code>GET</code> 放在请求头中）</p>
+<p>请求体：<code>JSON</code> 格式的数据</p>
+<p>返回值：用户信息（&#x3D;&#x3D;脱敏&#x3D;&#x3D;）</p>
+<h4 id="逻辑"><a href="#逻辑" class="headerlink" title="逻辑"></a>逻辑</h4><ol>
+<li>用户在前台输入：账号 <code>userAccount</code> ，密码 <code>userPassword</code></li>
+<li>校验输入的合法性<ol>
+<li>非空</li>
+<li><code>userAccount</code> 长度不小于 <code>4</code> 位</li>
+<li><code>userPassword</code> 长度不小于 <code>8</code> 位</li>
+<li><code>userAccount</code> 中不包含特殊字符</li>
+</ol>
+</li>
+<li>校验输入的密码执行与注册时相同的加密操作后得到的密文是否与数据库中的一致</li>
+<li>对用户信息进行脱敏操作，隐藏敏感信息（例如密码），防止数据库中的字段泄露</li>
+<li>记录用户的登录态 <code>(Session)</code>，将其存放到服务器上 <code>(SpringBoot 自带了一个 Tomcat 服务器，因此用 Tomcat 去记录)</code>，将用户登录态放入 <code>Session</code> 的 <code>Attribute</code> 域中</li>
+<li>返回脱敏后的信息</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">userLogin</span><span class="params">(String userAccount, String userPassword, HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 校验</span></span><br><span class="line">        <span class="comment">// 1.1 非空</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isAnyBlank(userAccount,userPassword)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;参数为空&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1.2 账户长度不小于 4 位</span></span><br><span class="line">        <span class="keyword">if</span> (userAccount.length() &lt; <span class="number">4</span> ) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账户长度小于 4 位&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1.3 密码不小于 8 位</span></span><br><span class="line">        <span class="keyword">if</span> (userPassword.length() &lt; <span class="number">8</span> ) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;密码小于 8 位&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1.4 账户不包含特殊字符</span></span><br><span class="line">        String validPattern = <span class="string">&quot;[`~!@#$%^&amp;*()+=|&#123;&#125;&#x27;:;&#x27;,\\\\[\\\\].&lt;&gt;/?~！@#￥%……&amp;*（）——+|&#123;&#125;【】‘；：”“’。，、？]&quot;</span>;</span><br><span class="line">        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);</span><br><span class="line">        <span class="keyword">if</span> (matcher.find()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账号包含特殊字符&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 加密密码</span></span><br><span class="line">        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 查询用户是否存在</span></span><br><span class="line">        QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">        queryWrapper.eq(<span class="string">&quot;userAccount&quot;</span>, userAccount);</span><br><span class="line">        queryWrapper.eq(<span class="string">&quot;userPassword&quot;</span>, encryptPassword);</span><br><span class="line">        User user = userMapper.selectOne(queryWrapper);</span><br><span class="line">        <span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</span><br><span class="line">            log.info(<span class="string">&quot;user login failed, userAccount can not match userPassword&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR, <span class="string">&quot;账号密码不匹配&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        User safetyUser = getSafetyUser(user);</span><br><span class="line">        <span class="comment">// 3. 用户脱敏</span></span><br><span class="line">        <span class="comment">// 4. 记录用户登录态</span></span><br><span class="line">        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);</span><br><span class="line">        <span class="keyword">return</span> safetyUser;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h3><h4 id="逻辑-1"><a href="#逻辑-1" class="headerlink" title="逻辑"></a>逻辑</h4><ol>
+<li>通过 <code>request</code> 返回的信息查看用户是否存在</li>
+<li>将 <code>Session</code> 的 <code>Attribute</code> 域中用户的 <code>userStatus</code> 移除</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">userLogout</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        request.getSession().removeAttribute(USER_LOGIN_STATE);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<blockquote>
+<p> 对于注册的密码一定不能将明文存入数据库中，保证数据的安全性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 盐值: 来对密码进行混淆操作的值，可以理解为向菜中加了盐，味道就变了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SALT = <span class="string">&quot;Medamap&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加密密码: 采用了 SpringBoot 自带的 md5 加密方法，进行单向加密</span></span><br><span class="line">String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>常量接口：</p>
+<p>我们使用的方法：通过一个 常量接口 来将我们全局使用的变量封装起来，用时直接用 接口名.常量名 来调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户常量</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Medamap</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 存放常量使用接口类型</span></span><br><span class="line"><span class="comment"> * 因为接口里的常量都为 public static final</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserConstant</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户登录态的键</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String USER_LOGIN_STATE = <span class="string">&quot;userLoginState&quot;</span>;</span><br><span class="line">    <span class="comment">// ------- 权限 --------</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 普通用户权限</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">int</span> DEFAULT_ROLE = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 管理员权限</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">int</span> ADMIN_ROLE = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<hr>
+<h2 id="控制层封装请求-Controller"><a href="#控制层封装请求-Controller" class="headerlink" title="控制层封装请求 (Controller)"></a>控制层封装请求 <code>(Controller)</code></h2><p><code>controller</code> 层倾向于对请求参数本身的校验，不涉及业务逻辑本身（越少越好）</p>
+<h3 id="配置全局文件-application-yml"><a href="#配置全局文件-application-yml" class="headerlink" title="配置全局文件 (application.yml)"></a>配置全局文件 <code>(application.yml)</code></h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 指定全局接口 API</span></span><br><span class="line"></span><br><span class="line"><span class="attr">servlet:</span></span><br><span class="line">  <span class="attr">context-path:</span> <span class="string">/api</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="RestController"><a href="#RestController" class="headerlink" title="@RestController"></a>@<code>RestController</code></h3><p>适用于编写 <code>Restful</code> 风格的 <code>API</code> ，返回值默认为 <code>json</code> 类型</p>
+<h3 id="封装响应对象"><a href="#封装响应对象" class="headerlink" title="封装响应对象"></a>封装响应对象</h3><h4 id="UserLoginRequest"><a href="#UserLoginRequest" class="headerlink" title="UserLoginRequest"></a><code>UserLoginRequest</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserLoginRequest</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">3389384515140470283L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userAccount;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userPassword;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UserRegisterRequest"><a href="#UserRegisterRequest" class="headerlink" title="UserRegisterRequest"></a><code>UserRegisterRequest</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserRegisterRequest</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 序列化时，分给的一个 唯一的 id 用于区分对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">6605806198669593100L</span>;</span><br><span class="line">    <span class="comment">// 定义前端传入的参数问题</span></span><br><span class="line">    <span class="keyword">private</span> String userAccount;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userPassword;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String checkPassword;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String planetCode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实现 <code>Serializable</code> 接口的目的是对对象进行序列化，通过唯一的 <code>id</code> ：<code>serialVersionUID</code> 来区分对象</p>
+<p>下面的成员变量都是用来对应前端传入的参数</p>
+<p><code>@Data</code> 是 <code>lombok</code> 的一个注解，用于自动生成 <code>Getter</code> 和 <code>Setter</code> 方法，就不需要自己手动写方法</p>
+<p>封装的目的是统一传入的值的类型，需要时直接从对象中取即可，不用将所有的参数都写在形参的位置上</p>
+</blockquote>
+<h3 id="配置全局的-RequestMapping"><a href="#配置全局的-RequestMapping" class="headerlink" title="配置全局的 RequestMapping"></a>配置全局的 <code>RequestMapping</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Restful 注解</span></span><br><span class="line"><span class="comment"> * 主要整合了两个注解</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Controller</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ResponseBody</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 接收请求的路径 /api/user</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="注册-1"><a href="#注册-1" class="headerlink" title="注册"></a>注册</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line"><span class="comment">// 通过 @RequestBody 让 spring 将 前端传入的信息预 urr 对应</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> BaseResponse&lt;Long&gt; <span class="title">userRegister</span><span class="params">(<span class="meta">@RequestBody</span> UserRegisterRequest urr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (urr == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NULL_ERROR,<span class="string">&quot;注册请求体为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 规范写法</span></span><br><span class="line">    String userAccount = urr.getUserAccount();</span><br><span class="line">    String userPassword = urr.getUserPassword();</span><br><span class="line">    String checkPassword = urr.getCheckPassword();</span><br><span class="line">    String planetCode = urr.getPlanetCode();</span><br><span class="line">    <span class="comment">// 参数都不为空</span></span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isAnyBlank(userAccount,userPassword,checkPassword,planetCode)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR,<span class="string">&quot;参数为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">long</span> result = userService.userRegister(userAccount, userPassword, checkPassword, planetCode);</span><br><span class="line">    <span class="comment">// return new BaseResponse&lt;&gt;(0, result, &quot;ok&quot;);</span></span><br><span class="line">    <span class="keyword">return</span> ResultUtils.success(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="登录-1"><a href="#登录-1" class="headerlink" title="登录"></a>登录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="comment">// 通过 @RequestBody 让 spring 将 前端传入的信息预 urr 对应</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> BaseResponse&lt;User&gt; <span class="title">userLogin</span><span class="params">(<span class="meta">@RequestBody</span> UserLoginRequest ulr, HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ulr == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NULL_ERROR,<span class="string">&quot;登录请求体为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 规范写法</span></span><br><span class="line">    String userAccount = ulr.getUserAccount();</span><br><span class="line">    String userPassword = ulr.getUserPassword();</span><br><span class="line">    <span class="comment">// 参数都不为空</span></span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isAnyBlank(userAccount,userPassword)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR,<span class="string">&quot;参数为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    User user = userService.userLogin(userAccount, userPassword, request);</span><br><span class="line">    <span class="comment">// return new BaseResponse&lt;&gt;(0, user,&quot;ok&quot;);</span></span><br><span class="line">    <span class="keyword">return</span> ResultUtils.success(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取当前的用户信息"><a href="#获取当前的用户信息" class="headerlink" title="获取当前的用户信息"></a>获取当前的用户信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/current&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> BaseResponse&lt;User&gt; <span class="title">getCurrentUser</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);</span><br><span class="line">    User currentUser = (User) userObj;</span><br><span class="line">    <span class="keyword">if</span> (currentUser == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NOT_LOGIN,<span class="string">&quot;未获取到登录用户信息&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">long</span> id = currentUser.getId();</span><br><span class="line">    <span class="comment">// todo 校验用户是否合法</span></span><br><span class="line">    User user = userService.getById(id);</span><br><span class="line">    User safetyUser = userService.getSafetyUser(user);</span><br><span class="line">    <span class="keyword">return</span> ResultUtils.success(safetyUser);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询用户"><a href="#查询用户" class="headerlink" title="查询用户"></a>查询用户</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/search&quot;)</span></span><br><span class="line"><span class="keyword">public</span> BaseResponse&lt;List&lt;User&gt;&gt; searchUsers(String username, HttpServletRequest request) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!isAdmin(request)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NO_AUTH,<span class="string">&quot;非管理员&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span> (StringUtils.isNotBlank(username)) &#123;</span><br><span class="line">        queryWrapper.like(<span class="string">&quot;username&quot;</span>, username);</span><br><span class="line">    &#125;</span><br><span class="line">    List&lt;User&gt; userList = userService.list(queryWrapper);</span><br><span class="line">    List&lt;User&gt; list = userList.stream().map(user -&gt; userService.getSafetyUser(user)).collect(Collectors.toList());</span><br><span class="line">    <span class="keyword">return</span> ResultUtils.success(list);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除用户-逻辑删除"><a href="#删除用户-逻辑删除" class="headerlink" title="删除用户(逻辑删除)"></a>删除用户(逻辑删除)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/delete&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> BaseResponse&lt;Boolean&gt; <span class="title">deleteUser</span><span class="params">(<span class="meta">@RequestBody</span> <span class="keyword">long</span> id, HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!isAdmin(request)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NO_AUTH,<span class="string">&quot;非管理员&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (id &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.PARAMS_ERROR,<span class="string">&quot;id 不合法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">boolean</span> b = userService.removeById(id);</span><br><span class="line">    <span class="keyword">return</span> ResultUtils.success(b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注销-1"><a href="#注销-1" class="headerlink" title="注销"></a>注销</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/logout&quot;)</span></span><br><span class="line"><span class="comment">// 通过 @RequestBody 让 spring 将 前端传入的信息预 urr 对应</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Integer <span class="title">userLogout</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (request == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BusinessException(ErrorCode.NULL_ERROR,<span class="string">&quot;注销请求体为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> userService.userLogout(request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>查询用户建议使用 <code>@GetMapping</code></p>
+<p>其他可以使用 <code>@PostMapping</code> ，完全使用 <code>Restful</code> 风格也可以例如 <code>@PutMapping</code> 和 <code>@DeleteMapping</code></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ZeroTwo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://zerotwo0w0.github.io/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/">http://zerotwo0w0.github.io/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://ZeroTwo0w0.github.io" target="_blank">ZeroTwo Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/03/24/Collection/%E9%9B%86%E5%90%88/"><img class="next-cover" src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">集合学习</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZeroTwo</div><div class="author-info__description">阿巴阿巴阿巴</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/ZeroTwo0w0" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83-demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7"><span class="toc-number">1.</span> <span class="toc-text">项目总结（用户中心 demo）的收获</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.4.</span> <span class="toc-text">数据库设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%9A%84%E9%80%BB%E8%BE%91-Service-%E5%B1%82"><span class="toc-number">1.5.</span> <span class="toc-text">服务的逻辑 (Service 层)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C"><span class="toc-number">1.5.1.</span> <span class="toc-text">注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95"><span class="toc-number">1.5.2.</span> <span class="toc-text">登录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%94%80"><span class="toc-number">1.5.3.</span> <span class="toc-text">注销</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91-1"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">逻辑</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%B1%82%E5%B0%81%E8%A3%85%E8%AF%B7%E6%B1%82-Controller"><span class="toc-number">1.6.</span> <span class="toc-text">控制层封装请求 (Controller)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80%E6%96%87%E4%BB%B6-application-yml"><span class="toc-number">1.6.1.</span> <span class="toc-text">配置全局文件 (application.yml)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RestController"><span class="toc-number">1.6.2.</span> <span class="toc-text">@RestController</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E5%93%8D%E5%BA%94%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.6.3.</span> <span class="toc-text">封装响应对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UserLoginRequest"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">UserLoginRequest</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UserRegisterRequest"><span class="toc-number">1.6.3.2.</span> <span class="toc-text">UserRegisterRequest</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80%E7%9A%84-RequestMapping"><span class="toc-number">1.6.4.</span> <span class="toc-text">配置全局的 RequestMapping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C-1"><span class="toc-number">1.6.5.</span> <span class="toc-text">注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95-1"><span class="toc-number">1.6.6.</span> <span class="toc-text">登录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E7%9A%84%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">1.6.6.1.</span> <span class="toc-text">获取当前的用户信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%94%A8%E6%88%B7"><span class="toc-number">1.6.6.2.</span> <span class="toc-text">查询用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7-%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4"><span class="toc-number">1.6.6.3.</span> <span class="toc-text">删除用户(逻辑删除)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%94%80-1"><span class="toc-number">1.6.7.</span> <span class="toc-text">注销</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/" title="Project harvest and summary"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Project harvest and summary"/></a><div class="content"><a class="title" href="/2022/04/14/UserCenterProjectNote/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%EF%BC%88%E7%94%A8%E6%88%B7%E4%B8%AD%E5%BF%83%20demo%EF%BC%89%E7%9A%84%E6%94%B6%E8%8E%B7/" title="Project harvest and summary">Project harvest and summary</a><time datetime="2022-04-14T11:46:00.000Z" title="发表于 2022-04-14 19:46:00">2022-04-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/24/Collection/%E9%9B%86%E5%90%88/" title="集合学习"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="集合学习"/></a><div class="content"><a class="title" href="/2022/03/24/Collection/%E9%9B%86%E5%90%88/" title="集合学习">集合学习</a><time datetime="2022-03-24T05:00:00.000Z" title="发表于 2022-03-24 13:00:00">2022-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/16/Algorithm/KMP%E7%AE%97%E6%B3%95/" title="KMP 算法"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="KMP 算法"/></a><div class="content"><a class="title" href="/2022/03/16/Algorithm/KMP%E7%AE%97%E6%B3%95/" title="KMP 算法">KMP 算法</a><time datetime="2022-03-16T02:44:00.000Z" title="发表于 2022-03-16 10:44:00">2022-03-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/12/Collection/HashSet.add()%20%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%EF%BC%88%E7%9C%8B%E9%9F%A9%E8%80%81%E5%B8%88%E8%A7%86%E9%A2%91%EF%BC%89/" title="HashSet底层源码"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HashSet底层源码"/></a><div class="content"><a class="title" href="/2022/03/12/Collection/HashSet.add()%20%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%EF%BC%88%E7%9C%8B%E9%9F%A9%E8%80%81%E5%B8%88%E8%A7%86%E9%A2%91%EF%BC%89/" title="HashSet底层源码">HashSet底层源码</a><time datetime="2022-03-12T04:47:00.000Z" title="发表于 2022-03-12 12:47:00">2022-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/20/JavaBasicKnowledge/Lambda/" title="Lambda 表达式"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/91365652_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lambda 表达式"/></a><div class="content"><a class="title" href="/2022/02/20/JavaBasicKnowledge/Lambda/" title="Lambda 表达式">Lambda 表达式</a><time datetime="2022-02-20T07:15:00.000Z" title="发表于 2022-02-20 15:15:00">2022-02-20</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By ZeroTwo</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
