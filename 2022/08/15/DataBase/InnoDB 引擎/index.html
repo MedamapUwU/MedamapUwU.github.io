@@ -1,0 +1,250 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>InnoDB 引擎 | Medamap's Blog</title><meta name="keywords" content="Medamap"><meta name="author" content="Medamap"><meta name="copyright" content="Medamap"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="InnoDB 引擎逻辑存储结构 其中  表空间：(ibd)文件，一个 mysql 实例可以对应多个表空间，用于存储记录、索引等数据。 段：分为 数据段（Leaf node segment）、索引段（Non-leaf node segement）、回滚段(Rollback segment)、InnoDB 是索引组织表，数据段就是 B+ 树的叶子结点，索引段即为 B+ 树的非叶子节点，段用来管理多个区">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InnoDB 引擎">
+<meta property="og:url" content="http://medamapuwu.github.io/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:site_name" content="Medamap&#39;s Blog">
+<meta property="og:description" content="InnoDB 引擎逻辑存储结构 其中  表空间：(ibd)文件，一个 mysql 实例可以对应多个表空间，用于存储记录、索引等数据。 段：分为 数据段（Leaf node segment）、索引段（Non-leaf node segement）、回滚段(Rollback segment)、InnoDB 是索引组织表，数据段就是 B+ 树的叶子结点，索引段即为 B+ 树的非叶子节点，段用来管理多个区">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg">
+<meta property="article:published_time" content="2022-08-15T10:59:00.000Z">
+<meta property="article:modified_time" content="2022-08-15T11:00:01.913Z">
+<meta property="article:author" content="Medamap">
+<meta property="article:tag" content="Medamap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://medamapuwu.github.io/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'InnoDB 引擎',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-15 19:00:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Medamap's Blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">InnoDB 引擎</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-15T10:59:00.000Z" title="发表于 2022-08-15 18:59:00">2022-08-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-15T11:00:01.913Z" title="更新于 2022-08-15 19:00:01">2022-08-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="InnoDB 引擎"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="InnoDB-引擎"><a href="#InnoDB-引擎" class="headerlink" title="InnoDB 引擎"></a>InnoDB 引擎</h1><h2 id="逻辑存储结构"><a href="#逻辑存储结构" class="headerlink" title="逻辑存储结构"></a>逻辑存储结构</h2><p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815155408222.png" alt="image-20220815155408222"></p>
+<p>其中</p>
+<ul>
+<li>表空间：(ibd)文件，一个 mysql 实例可以对应多个表空间，用于存储记录、索引等数据。</li>
+<li>段：分为 数据段（Leaf node segment）、索引段（Non-leaf node segement）、回滚段(Rollback segment)、InnoDB 是索引组织表，数据段就是 B+ 树的叶子结点，索引段即为 B+ 树的非叶子节点，段用来管理多个区</li>
+<li>区：表空间的单元结构，每个区大小为 1M。默认情况下，InnoDB 存储引擎页的大小为 16K，即一个区中有 64 个页</li>
+<li>页：是 InnoDB 存储引擎磁盘管理的最小单元，每个页大小为 16kb，为保证页的连续性，InnoDB每次申请磁盘时会申请4-5个区</li>
+<li>行：InnoDB 存储引擎数据是按行进行存储的<ul>
+<li><code>Trx_id</code>：每次对某条记录进行改动时，都会吧对应的事务 <code>id</code> 赋值给 <code>trx_id</code> 隐藏列<ul>
+<li><code>Roll_pointer</code> ：每次对某条记录进行改动时，都会把旧版本写入到 undo 日志中，然后这个隐藏列就相当于一个指针，可以通过他来寻找之前的修改记录</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>整体架构</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815161941730.png" alt="image-20220815161941730"></p>
+<p>左侧为 内存结构，右侧为 磁盘结构</p>
+<h3 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h3><p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815162820367.png" alt="image-20220815162820367"></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815164819296.png" alt="image-20220815164819296"></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815165115412.png" alt="image-20220815165115412"></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815165706187.png" alt="image-20220815165706187"></p>
+<h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><h2 id="事务原理"><a href="#事务原理" class="headerlink" title="事务原理"></a>事务原理</h2><p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815170130566.png" alt="image-20220815170130566"></p>
+<h3 id="redo-log-实现事务的持久性"><a href="#redo-log-实现事务的持久性" class="headerlink" title="redo log 实现事务的持久性"></a>redo log 实现事务的持久性</h3><p>redo log ：又称重做日志，记录的是事务提交时数据也的物理修改，是用来实现事务的持久性。</p>
+<p>该日志由两部分组成</p>
+<ul>
+<li>重做日志缓冲(redo log buffer) ：在内存中</li>
+<li>重做日志文件 (redo log file)：在磁盘中</li>
+</ul>
+<p>当事务提交后，会把所有的修改信息保存在 redo log file 中，用于刷新脏页到磁盘，发生错误时，进行数据恢复</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815172115692.png" alt="image-20220815172115692"></p>
+<h3 id="undo-log-实现事务的原子性"><a href="#undo-log-实现事务的原子性" class="headerlink" title="undo log 实现事务的原子性"></a>undo log 实现事务的原子性</h3><p>回滚日志，用于记录数据被修改前的信息，作用包含两个 ：提供回滚 和 MVCC(多版本并发控制)</p>
+<p>undo log 与 redo log 记录物理日志不同，他记录的是逻辑日志。可以理解为，记录了与执行操作相反的操作信息，也就是将修改的数据恢复的 sql 语句，举例来说：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 执行语句</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> account <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- undo log 中的语句 () 包含的是被删除的具体数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> account <span class="keyword">values</span> (......)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 执行语句</span></span><br><span class="line">update account <span class="keyword">set</span> money <span class="operator">=</span> money <span class="operator">-</span> <span class="number">1000</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- undo log 中的语句</span></span><br><span class="line">update account <span class="keyword">set</span> money <span class="operator">=</span> money <span class="operator">+</span> <span class="number">1000</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>当执行 rollback 操作时，就可以从 undo log 的逻辑记录中读取到相应的内容，并进行回滚</p>
+<p>Undo log 销毁：undo log 在事务执行时产生，事务提交时，并不会立即删除 undo log ，因为这些日志还有可能用于 MVCC</p>
+<p>Undo log 存储：undo log 采用段的方式进行管理和记录，存放在前面介绍的 rollback segment 回滚段中，内部包含 1024 个 undo log segment</p>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><h3 id="几个概念"><a href="#几个概念" class="headerlink" title="几个概念"></a>几个概念</h3><h4 id="当前读"><a href="#当前读" class="headerlink" title="当前读"></a>当前读</h4><p>读取的记录是最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁。对于我们日常操作：<code>select ... lock in share modd(共享锁), select ... for update、update 、insert、delete(排它锁)</code>  都是当前读</p>
+<img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815174554681.png" alt="image-20220815174554681" style="zoom:67%;" />
+
+<p>第一张是另外一个客户端提交事务之后，但是没有在 sql 后面添加 <code>lock in share mode</code>，加上之后会出现修改后的数据</p>
+<h4 id="快照读"><a href="#快照读" class="headerlink" title="快照读"></a>快照读</h4><p>简单的、不加锁的 <code>select</code> 语句，读取的是记录数据的可见版本，有可能是历史数据，<strong>不加锁，是非阻塞读</strong></p>
+<ul>
+<li><code>Read Commited</code>：每次 select 都会生成一个 <strong>快照读</strong></li>
+<li><code>Repeatable Read</code>：开启事务后第一个 select 语句才是快照读的地方</li>
+<li><code>Serializable</code>：<strong>快照读</strong>会退化为<strong>当前读</strong></li>
+</ul>
+<h4 id="MVCC-1"><a href="#MVCC-1" class="headerlink" title="MVCC"></a>MVCC</h4><p>全称为 Multi-Version Concurrency Control，多版本并发控制。指维护一个数据的多个版本，使得读写操作没有冲突，快照读为 MySQL 实现 MVCC 提供了一个非阻塞读功能。MVCC 的具体实现，还需要依赖于数据库记录中的<strong>三个隐式字段</strong>， <strong>undo log 日志</strong>， <strong>readView</strong></p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><h4 id="记录隐藏字段"><a href="#记录隐藏字段" class="headerlink" title="记录隐藏字段"></a>记录隐藏字段</h4><p>除了建表的字段外还有三个隐藏字段，分别为：<code>DB_TRX_ID</code>、<code>DB_ROLL_PTR</code>、<code>DB_ROW_ID</code></p>
+<table>
+<thead>
+<tr>
+<th>隐藏字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DB_TRX_ID</code></td>
+<td>最近修改事务 <code>ID</code> ，记录插入这条记录或最后一次修改该记录的事务 <code>ID</code></td>
+</tr>
+<tr>
+<td><code>DB_ROLL_PTR</code></td>
+<td>回滚指针，只想这条记录的上一个版本，用于配合 undo log，指向上一个版本</td>
+</tr>
+<tr>
+<td><code>DB_ROW_ID</code></td>
+<td>隐藏主键，如果表结构没有指明主键，将会生成隐藏字段</td>
+</tr>
+</tbody></table>
+<h4 id="undo-log-版本链"><a href="#undo-log-版本链" class="headerlink" title="undo log 版本链"></a><code>undo log</code> 版本链</h4><p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815181418384.png" alt="image-20220815181418384"></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815181643092.png" alt="image-20220815181643092"></p>
+<p>不同事务或相同事务对同一条记录进行修改，会导致该记录的 undo log 日志生成一条记录版本链路，链表的头部是最新的记录，链表的尾部是最旧的记录</p>
+<h4 id="readView"><a href="#readView" class="headerlink" title="readView"></a><code>readView</code></h4><p><code>ReadView</code> （读视图）是快照读 SQL 执行时 MVCC 提取数据的依据，记录并维护系统当前活跃的（未提交的）事务 <code>id</code></p>
+<p>包含了 四个核心字段</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>m_ids</code></td>
+<td>当前活跃的事务 ID 集合</td>
+</tr>
+<tr>
+<td><code>min_trx_id</code></td>
+<td>最小活跃事务 ID</td>
+</tr>
+<tr>
+<td><code>max_trx_id</code></td>
+<td>预分配事务 ID，当前最大事务 ID + 1 ( 事务 ID 是自增的)</td>
+</tr>
+<tr>
+<td><code>creator_trx_id</code></td>
+<td>ReadView 创建者的事务ID</td>
+</tr>
+</tbody></table>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220815184240440.png" alt="image-20220815184240440"></p>
+<p>不同隔离级别，生成 ReadView  的时机不同</p>
+<ul>
+<li>READ COMMITED：在事务中每一次执行快照读时生成 ReadView</li>
+<li>REPEATABLE READ：仅在事务中第一次执行快照读时生成 ReadView，后续复用该 ReadView</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Medamap</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://medamapuwu.github.io/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/">http://medamapuwu.github.io/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://MedamapUwU.github.io" target="_blank">Medamap's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/08/15/DataBase/MySQL%20%E7%9A%84%E9%94%81/"><img class="prev-cover" src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL 的锁</div></div></a></div><div class="next-post pull-right"><a href="/2022/08/14/DataBase/SQL%20%E4%BC%98%E5%8C%96/"><img class="next-cover" src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SQL 优化</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Medamap</div><div class="author-info__description">Make EveryDay As Meaningful As Possible</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/MedamapUwU" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#InnoDB-%E5%BC%95%E6%93%8E"><span class="toc-number">1.</span> <span class="toc-text">InnoDB 引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">逻辑存储结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">内存结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">磁盘结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">事务原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redo-log-%E5%AE%9E%E7%8E%B0%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%8C%81%E4%B9%85%E6%80%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text">redo log 实现事务的持久性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undo-log-%E5%AE%9E%E7%8E%B0%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="toc-number">1.3.2.</span> <span class="toc-text">undo log 实现事务的原子性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVCC"><span class="toc-number">1.4.</span> <span class="toc-text">MVCC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5"><span class="toc-number">1.4.1.</span> <span class="toc-text">几个概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E8%AF%BB"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">当前读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E8%AF%BB"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">快照读</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MVCC-1"><span class="toc-number">1.4.1.3.</span> <span class="toc-text">MVCC</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">记录隐藏字段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undo-log-%E7%89%88%E6%9C%AC%E9%93%BE"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">undo log 版本链</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readView"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">readView</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/08/15/DataBase/MySQL%20%E7%9A%84%E9%94%81/" title="MySQL 的锁"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL 的锁"/></a><div class="content"><a class="title" href="/2022/08/15/DataBase/MySQL%20%E7%9A%84%E9%94%81/" title="MySQL 的锁">MySQL 的锁</a><time datetime="2022-08-15T11:00:00.000Z" title="发表于 2022-08-15 19:00:00">2022-08-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/" title="InnoDB 引擎"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB 引擎"/></a><div class="content"><a class="title" href="/2022/08/15/DataBase/InnoDB%20%E5%BC%95%E6%93%8E/" title="InnoDB 引擎">InnoDB 引擎</a><time datetime="2022-08-15T10:59:00.000Z" title="发表于 2022-08-15 18:59:00">2022-08-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/14/DataBase/SQL%20%E4%BC%98%E5%8C%96/" title="SQL 优化"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL 优化"/></a><div class="content"><a class="title" href="/2022/08/14/DataBase/SQL%20%E4%BC%98%E5%8C%96/" title="SQL 优化">SQL 优化</a><time datetime="2022-08-14T13:36:00.000Z" title="发表于 2022-08-14 21:36:00">2022-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/14/DataBase/SQL%20%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" title="SQL 性能分析"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL 性能分析"/></a><div class="content"><a class="title" href="/2022/08/14/DataBase/SQL%20%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" title="SQL 性能分析">SQL 性能分析</a><time datetime="2022-08-14T13:36:00.000Z" title="发表于 2022-08-14 21:36:00">2022-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/13/DataBase/MySql%20%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="MySql 存储引擎"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySql 存储引擎"/></a><div class="content"><a class="title" href="/2022/08/13/DataBase/MySql%20%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/" title="MySql 存储引擎">MySql 存储引擎</a><time datetime="2022-08-13T12:39:00.000Z" title="发表于 2022-08-13 20:39:00">2022-08-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By Medamap</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
