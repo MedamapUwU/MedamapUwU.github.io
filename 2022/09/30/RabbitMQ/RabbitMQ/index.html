@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>RabbitMQ 基础理解 | Medamap's Blog</title><meta name="keywords" content="Medamap"><meta name="author" content="Medamap"><meta name="copyright" content="Medamap"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="RabbitMQ MQ 即为 Message Queue 消息队列，本质上是个队列，FIFO 先进先出，只不过队列中存放的是 message 而已，还是一种 跨进程 的通信机制，用于上下游传递消息。 MQ 的三大功能  流量消峰 应用解耦 异步处理  MQ 的分类  ActiveMQ 单机吞吐量万级，时效性 ms 级，可用性高，基于主从架构实现高可用性，消息可靠性较低的概率丢失数据 缺点：社区少维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ 基础理解">
+<meta property="og:url" content="http://medamapuwu.github.io/2022/09/30/RabbitMQ/RabbitMQ/index.html">
+<meta property="og:site_name" content="Medamap&#39;s Blog">
+<meta property="og:description" content="RabbitMQ MQ 即为 Message Queue 消息队列，本质上是个队列，FIFO 先进先出，只不过队列中存放的是 message 而已，还是一种 跨进程 的通信机制，用于上下游传递消息。 MQ 的三大功能  流量消峰 应用解耦 异步处理  MQ 的分类  ActiveMQ 单机吞吐量万级，时效性 ms 级，可用性高，基于主从架构实现高可用性，消息可靠性较低的概率丢失数据 缺点：社区少维">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg">
+<meta property="article:published_time" content="2022-09-30T04:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-12T10:54:57.915Z">
+<meta property="article:author" content="Medamap">
+<meta property="article:tag" content="Medamap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://medamapuwu.github.io/2022/09/30/RabbitMQ/RabbitMQ/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RabbitMQ 基础理解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-10-12 18:54:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Medamap's Blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RabbitMQ 基础理解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-09-30T04:00:00.000Z" title="发表于 2022-09-30 12:00:00">2022-09-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-10-12T10:54:57.915Z" title="更新于 2022-10-12 18:54:57">2022-10-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RabbitMQ 基础理解"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>RabbitMQ</p>
+<p>MQ 即为 Message Queue 消息队列，本质上是个队列，FIFO 先进先出，只不过队列中存放的是 message 而已，还是一种 <strong>跨进程</strong> 的通信机制，用于上下游传递消息。</p>
+<p>MQ 的三大功能</p>
+<ul>
+<li>流量消峰</li>
+<li>应用解耦</li>
+<li>异步处理</li>
+</ul>
+<p>MQ 的分类</p>
+<ul>
+<li>ActiveMQ<ul>
+<li>单机吞吐量万级，时效性 ms 级，可用性高，基于主从架构实现高可用性，消息可靠性较低的概率丢失数据</li>
+<li>缺点：社区少维护，高吞吐量的场景较少</li>
+</ul>
+</li>
+<li>Kafka<ul>
+<li>为大数据而生</li>
+</ul>
+</li>
+<li>RocketMQ<ul>
+<li>优点：高并发性，性能较好；吞吐量万级，支持多种语言，社区活跃度高</li>
+</ul>
+</li>
+</ul>
+<p>RabbitMQ</p>
+<p>概念：是一个消息中间件，他接收并转发消息。类似于快递站的定位</p>
+<p>四大核心概念</p>
+<ul>
+<li>生产者</li>
+<li>交换机</li>
+<li>队列</li>
+<li>消费者</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220922194215031.png" alt="image-20220922194215031"></p>
+<p>六大模式</p>
+<ul>
+<li>简单模式 (“Hello World”)</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923153018773.png" alt="image-20220923153018773"></p>
+<ul>
+<li>工作模式  (“Work queues”)</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923153052736.png" alt="image-20220923153052736"></p>
+<ul>
+<li>发布订阅模式 (“Publish&#x2F;Subscribe”)</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923153119095.png" alt="image-20220923153119095"></p>
+<ul>
+<li>路由模式 (“Routing”)</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923153211857.png" alt="image-20220923153211857"></p>
+<ul>
+<li>主题模式 (“Topics”)</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923153233187.png" alt="image-20220923153233187"></p>
+<ul>
+<li><p>发布确认模式 (“Publisher Confirms”)</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220922194556835.png" alt="image-20220922194556835"></p>
+</li>
+</ul>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220922194841602.png" alt="image-20220922194841602"></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220922195038990.png" alt="image-20220922195038990"></p>
+<p>消息的可靠投递</p>
+<p>Consumer Ack</p>
+<p>ack 是指 Acknowledge，确认。表示消费端收到消息后的确认方式</p>
+<p>有三种方式确认：</p>
+<ul>
+<li>自动确认：acknowledge &#x3D; “none”</li>
+<li>手动确认：acknowledge &#x3D; “manual”</li>
+<li>根据异常情况确认：acknowledge &#x3D; “auto”</li>
+</ul>
+<p>TTL</p>
+<p>time to live（存活时间&#x2F;过期时间）</p>
+<p>当消息到达存活时间后，还没有被消费，会被自动清除</p>
+<p>RabbitMQ 可以对消息设置过期时间，也可以对队列设置过期时间</p>
+<p>死信队列</p>
+<p>Dead Letter Exchange（死信交换机），当消息成为 Dead Message 后，可以被重新发送至另一个交换机，这个交换机为 DLX</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923163828873.png" alt="image-20220923163828873">消息成为死信的三个情况</p>
+<ul>
+<li>队列消息长度达到限制</li>
+<li>消费者拒绝消费信息，basicAck&#x2F;basicReject，并且不把消息放入原目标队列，requeue &#x3D; false</li>
+<li>原消息存在消息过期设置，消息到时间未被消费</li>
+</ul>
+<p>队列绑定死信交换机</p>
+<p>给队列设置参数：<code>x-dead-letter-exchange</code> 和 <code>x-dead-letter-routing-key</code></p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923164646071.png" alt="image-20220923164646071"></p>
+<p>延迟队列</p>
+<p>当消息进入队列后不会被立即消费，只有到达指定时间后，才会被消费</p>
+<p>RabbitMQ 没有直接提供延迟队列的功能，但是可以通过 TTL + DLX 来实现通等功能</p>
+<p>日志与监控</p>
+<p>RabbitMQ 的日志默认存放路径为：<code>/var/log/rabbitmq/rabbit@xxx.log</code> 其中 xxx 为主机名</p>
+<p>消息追踪</p>
+<p>在使用任何消息队列中间件中，难免会出现某条消息异常的情况。对于 RabbitMQ 而言，可能是因为生产者或消费者与 RabbitMQ 断开了连接，而且他们与 RabbitMQ 又采用了不同的确认机制；也有可能是因为交换器与队列之间不同的转发策略；甚至是交换器并没有与任何队列进行绑定，生产者又不感知或者没有采取相应的措施；另外 RabbitMQ 本身的集群策略也可能导致消息的丢失。这个时候就需要有一个较好的机制跟踪记录消息的投递过程，以此协助开发和运维人员进行问题的定位。</p>
+<p>在RabbitMQ 中可以使用 Firehose 和 rabbitmq_tracing 插件功能来实现消息追踪</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923195202684.png" alt="image-20220923195202684">消息补偿</p>
+<p><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/image-20220923195419389.png" alt="image-20220923195419389"></p>
+<p>消息幂等性</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Medamap</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://medamapuwu.github.io/2022/09/30/RabbitMQ/RabbitMQ/">http://medamapuwu.github.io/2022/09/30/RabbitMQ/RabbitMQ/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://MedamapUwU.github.io" target="_blank">Medamap's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/10/01/SolveProblem/CentOS%20%E7%B3%BB%E7%BB%9F%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4/"><img class="prev-cover" src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何查看 CentOS 的内核版本及系统版本</div></div></a></div><div class="next-post pull-right"><a href="/2022/09/29/SolveProblem/Linux%20%E4%B8%8B%E5%AE%89%E8%A3%85%20RabbitMQ%20Web%E6%8F%92%E4%BB%B6%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%83%85%E5%86%B5/"><img class="next-cover" src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux 安装 RabbitMQ Web 插件失败的解决方法</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/02.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Medamap</div><div class="author-info__description">Make EveryDay As Meaningful As Possible</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/MedamapUwU" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/SpringCloud/GateWay%20%E4%B8%89%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5/" title="GateWay 的三个重要概念"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GateWay 的三个重要概念"/></a><div class="content"><a class="title" href="/2022/10/03/SpringCloud/GateWay%20%E4%B8%89%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5/" title="GateWay 的三个重要概念">GateWay 的三个重要概念</a><time datetime="2022-10-03T04:00:00.000Z" title="发表于 2022-10-03 12:00:00">2022-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/SpringCloud/Hystrix/" title="hystrix 的相关问题"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hystrix 的相关问题"/></a><div class="content"><a class="title" href="/2022/10/03/SpringCloud/Hystrix/" title="hystrix 的相关问题">hystrix 的相关问题</a><time datetime="2022-10-03T04:00:00.000Z" title="发表于 2022-10-03 12:00:00">2022-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/03/SpringCloud/Ribbon%20%E7%9A%84%E5%87%A0%E7%A7%8D%E8%BD%AE%E8%AF%A2%E7%AD%96%E7%95%A5/" title="Ribbon 的轮询策略"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ribbon 的轮询策略"/></a><div class="content"><a class="title" href="/2022/10/03/SpringCloud/Ribbon%20%E7%9A%84%E5%87%A0%E7%A7%8D%E8%BD%AE%E8%AF%A2%E7%AD%96%E7%95%A5/" title="Ribbon 的轮询策略">Ribbon 的轮询策略</a><time datetime="2022-10-03T04:00:00.000Z" title="发表于 2022-10-03 12:00:00">2022-10-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/02/SpringCloud/Eureka/" title="SpringCloud 的 Eureka"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SpringCloud 的 Eureka"/></a><div class="content"><a class="title" href="/2022/10/02/SpringCloud/Eureka/" title="SpringCloud 的 Eureka">SpringCloud 的 Eureka</a><time datetime="2022-10-02T04:00:00.000Z" title="发表于 2022-10-02 12:00:00">2022-10-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/10/01/SpringCloud/RPC/" title="RPC"><img src="https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/503/97713980_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="RPC"/></a><div class="content"><a class="title" href="/2022/10/01/SpringCloud/RPC/" title="RPC">RPC</a><time datetime="2022-10-01T04:00:00.000Z" title="发表于 2022-10-01 12:00:00">2022-10-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By Medamap</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
